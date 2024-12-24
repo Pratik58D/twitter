@@ -145,40 +145,57 @@ export const updateUserProfile = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    if ((!newPassword && currentPassword) || (!currentPassword && newPassword)){
-      return res.status(400).json({ message: "Please provide both current and new password" });
+    if (
+      (!newPassword && currentPassword) ||
+      (!currentPassword && newPassword)
+    ) {
+      return res
+        .status(400)
+        .json({ message: "Please provide both current and new password" });
     }
 
-    if(currentPassword && newPassword){
-      const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
-      if(!isPasswordValid){
-        return res.status(400).json({ message: "current password doesnot matched" });
+    if (currentPassword && newPassword) {
+      const isPasswordValid = await bcrypt.compare(
+        currentPassword,
+        user.password
+      );
+      if (!isPasswordValid) {
+        return res
+          .status(400)
+          .json({ message: "current password doesnot matched" });
       }
-      if(newPassword.length < 6){
-        return res.status(400).json({ message: "Password must be atleast 6 characters long" });
+      if (newPassword.length < 6) {
+        return res
+          .status(400)
+          .json({ message: "Password must be atleast 6 characters long" });
       }
-      if(currentPassword === newPassword){
-        return res.status(400).json({ message: "New password cannot be same as current password" });
+      if (currentPassword === newPassword) {
+        return res
+          .status(400)
+          .json({ message: "New password cannot be same as current password" });
       }
       const salt = await bcrypt.genSalt(10);
       user.password = await bcrypt.hash(newPassword, salt);
     }
 
-    if(profileImg){
-      if(user.profileImg){
+    if (profileImg) {
+      if (user.profileImg) {
         //https://res.cloudinary.com/<cloud_name>/image/upload/v<version>/image.png
-        await cloudinary.uploader.destroy(user.profileImg.split("/").pop().split(".")[0]);
+        await cloudinary.uploader.destroy(
+          user.profileImg.split("/").pop().split(".")[0]
+        );
       }
-     const uploadResponse = await cloudinary.uploader.upload(profileImg);
-     profileImg = uploadResponse.secure_url
-
+      const uploadResponse = await cloudinary.uploader.upload(profileImg);
+      profileImg = uploadResponse.secure_url;
     }
-    if(coverImg){
-      if(user.coverImg){
-        await cloudinary.uploader.destroy(user.coverImg.split("/").pop().split(".")[0]);
+    if (coverImg) {
+      if (user.coverImg) {
+        await cloudinary.uploader.destroy(
+          user.coverImg.split("/").pop().split(".")[0]
+        );
       }
       const uploadResponse = await cloudinary.uploader.upload(coverImg);
-      coverImg = uploadResponse.secure_url
+      coverImg = uploadResponse.secure_url;
     }
     user.fullName = fullName || user.fullName;
     user.userName = userName || user.userName;
@@ -192,10 +209,6 @@ export const updateUserProfile = async (req, res) => {
     user.password = null;
 
     return res.status(200).json(user);
-
-
-
-
   } catch (error) {
     console.error("error in updateUserProfile", error.message);
     res.status(500).json({ message: "Internal server error" });

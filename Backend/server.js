@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import {v2 as cloudinary} from "cloudinary";
 import authRoutes from "./src/routes/auth.routes.js";
+import postRoutes from "./src/routes/post.routes.js";
 import userRoutes from "./src/routes/user.routes.js";
 import { connectDB } from "./src/config/db.js";
 
@@ -23,6 +24,7 @@ app.use(express.urlencoded({ extended: true }));  //to parse the form data
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/posts", postRoutes);
 
 app.listen(port, () => {
   console.log("server is running at ",port);
