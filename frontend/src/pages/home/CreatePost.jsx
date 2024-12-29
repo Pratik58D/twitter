@@ -13,13 +13,15 @@ const CreatePost = () => {
 	const isError = false;
 
 	const data = {
-		profileImg: "/avatars/boy1.png",
+		profileImg: "/profiles/profile.jpg",
 	};
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		alert("Post created successfully");
 	};
+
+	//since we have taken photo from req.body we have to do this
 
 	const handleImgChange = (e) => {
 		const file = e.target.files[0];
@@ -67,7 +69,8 @@ const CreatePost = () => {
 						/>
 						<BsEmojiSmileFill className='fill-primary w-5 h-5 cursor-pointer' />
 					</div>
-					<input type='file' hidden ref={imgRef} onChange={handleImgChange} />
+					{/* hidden input field */}
+					<input type='file' hidden accept='images/*' ref={imgRef} onChange={handleImgChange} />
 					<button className='btn btn-primary rounded-full btn-sm text-white px-4'>
 						{isPending ? "Posting..." : "Post"}
 					</button>
